@@ -1,23 +1,22 @@
 class Solution {
     public int minElement(int[] nums) {
-        for(int i=0;i<nums.length;i++){
-            int replacingNumber=sum(nums[i]);
-            nums[i]=replacingNumber;
-        }
-        Arrays.sort(nums);
-        return nums[0];
-    }
-    private int sum(int number){
-        int sumofdigits=0;
-        while(number>0){
-            
-        int digit=number%10;
-        sumofdigits+=digit;
-        number=number/10;
 
+        int min = Integer.MAX_VALUE;
+
+        for(int num : nums) {
+
+            int sum = 0;
+
+            while(num > 0) {
+
+                int rem = num % 10;
+                sum = sum + rem;
+                num = num / 10;
+            }
+
+            min = Math.min(sum, min);
         }
-        return sumofdigits;
-        
+
+        return min;
     }
-    
 }
