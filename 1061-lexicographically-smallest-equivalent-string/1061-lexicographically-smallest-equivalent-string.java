@@ -1,52 +1,36 @@
 class Solution {
-    // DSU ka parent array track karne ke liye (26 lowercase English letters)
-    int[] parent;
-
-    // Find function: Group ka ultimate representative dhoondne ke liye (with Path Compression)
-    private int find(int i) {
-        if (parent[i] == i) {
-            return i;
+    public String smallestEquivalentString(String s1, String s2, String baseStr) {
+        // Mapping array: initially har character khud se mapped hai
+        // 'a' -> 'a', 'b' -> 'b', etc.
+        char[] mapping = new char[26];
+        for (int i = 0; i < 26; i++) {
+            mapping[i] = (char) ('a' + i);
         }
-        return parent[i] = find(parent[i]); // Path compression
-    }
 
-    // Union function: Do characters ke groups ko merge karne ke liye
-    private void union(int i, int j) {
-        int rootI = find(i);
-        int rootJ = find(j);
+        // Step 1: s1 aur s2 ke characters ko map karo
+        for (int i = 0; i < s1.length(); i++) {
+            char c1 = s1.charAt(i);
+            char c2 = s2.charAt(i);
 
-        // Agar dono alag groups me hain, toh merge karo
-        if (rootI != rootJ) {
-            // Hamesha chote character wale root ko parent banao
-            if (rootI < rootJ) {
-                parent[rootJ] = rootI;
-            } else {
-                parent[rootI] = rootJ;
+            // Dono characters ki current sabse choti mapped value nikalo
+            char minChar = (mapping[c1 - 'a'] < mapping[c2 - 'a']) ? mapping[c1 - 'a'] : mapping[c2 - 'a'];
+            char maxChar = (mapping[c1 - 'a'] > mapping[c2 - 'a']) ? mapping[c1 - 'a'] : mapping[c2 - 'a'];
+
+            // Pure mapping array me jahan bhi maxChar mapped hai, use aur chota (minChar) kar do
+            if (minChar != maxChar) {
+                for (int j = 0; j < 26; j++) {
+                    if (mapping[j] == maxChar) {
+                        mapping[j] = minChar;
+                    }
+                }
             }
         }
-    }
 
-    public String smallestEquivalentString(String s1, String s2, String baseStr) {
-        parent = new int[26];
-        
-        // Initially, har character khud ka parent hai
-        for (int i = 0; i < 26; i++) {
-            parent[i] = i;
-        }
-
-        // Step 1: s1 aur s2 ke characters ke beech me union operation chalao
-        for (int i = 0; i < s1.length(); i++) {
-            int u = s1.charAt(i) - 'a';
-            int v = s2.charAt(i) - 'a';
-            union(u, v);
-        }
-
-        // Step 2: baseStr ke har character ko uske group ke sabse chote character se replace karo
+        // Step 2: baseStr ko convert karo direct mapping se
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < baseStr.length(); i++) {
-            int curr = baseStr.charAt(i) - 'a';
-            int smallestEquivalent = find(curr); // Sabse chota root milega
-            sb.append((char) (smallestEquivalent + 'a'));
+            char curr = baseStr.charAt(i);
+            sb.append(mapping[curr - 'a']); // Direct O(1) replacement
         }
 
         return sb.toString();
