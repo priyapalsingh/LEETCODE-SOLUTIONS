@@ -3,24 +3,29 @@ class Solution {
         int n = s1.length();
         int m = s2.length();
 
-        // Create DP table of size (n+1) x (m+1)
-        int[][] dp = new int[n + 1][m + 1];
+        //create dp table
+        int[][] dp=new int[n+1][m+1];
+        for(int[] row:dp){
+            Arrays.fill(row,-1);
+        }
+        return minoperation(s1,s2,n,m,dp);              
+        
+    }
+    private int minoperation(String s1, String s2,int i,int j,int[][] dp){
+        if(i==0) return j;
+        if(j==0) return i;
 
-        // Fill the table using bottom-up approach
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) {
-                // If characters match, extend LCS
-                if (s1.charAt(i - 1) == s2.charAt(j - 1))
-                    dp[i][j] = 1 + dp[i - 1][j - 1];
-                else
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-            }
+        if (dp[i][j] != -1) {
+            return dp[i][j];
         }
 
-        // Get LCS length
-        int lcs = dp[n][m];
+        if(s1.charAt(i-1)==s2.charAt(j-1)){
+           return dp[i][j]=  minoperation(s1,s2,i-1,j-1,dp);
+        }
 
-        // Return total operations = deletions + insertions
-        return (n - lcs) + (m - lcs);
+        int skipi=minoperation(s1,s2,i-1,j,dp);
+        int skipj=minoperation(s1,s2,i,j-1,dp);
+
+        return dp[i][j]=1+Math.min(skipi,skipj);
     }
 }
