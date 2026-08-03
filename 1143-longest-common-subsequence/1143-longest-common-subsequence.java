@@ -1,26 +1,18 @@
 class Solution {
-    Integer[][] memo; 
     public int longestCommonSubsequence(String s, String t) {
-        memo=new Integer[s.length()][t.length()];
-        int res=lcs(s,t,0,0);
-        return res;    
-    }
-    private int lcs(String s, String t,int i,int j){
-        if(i==s.length() || j==t.length()){
-            return 0;
+        int m = s.length();
+        int n = t.length();
+        int[][] dp = new int[m + 1][n + 1];
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
         }
-        if(memo[i][j]!=null){
-            return memo[i][j];
-        }
-        if(s.charAt(i)==t.charAt(j)){
-            memo[i][j]=1+lcs(s,t,i+1,j+1);
-        }else{
-            int skipi=lcs(s,t,i+1,j);
-            int skipj=lcs(s,t,i,j+1);
-            memo[i][j]=Math.max(skipi,skipj);
-        }
-        return memo[i][j];
-
-
+        return dp[m][n];
     }
 }
