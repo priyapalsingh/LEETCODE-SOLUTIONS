@@ -1,36 +1,31 @@
 class Solution {
+    // Function to solve the problem using tabulation
      public int uniquePathsWithObstacles(int[][] matrix) {
-        int m = matrix[0].length;    
-        int n = matrix.length;       
+        int m = matrix.length;    
+        int n = matrix[0].length;
 
-        // DP table to store results
-        int[][] dp = new int[n][m];
-
-        return func(m, n, matrix, dp);
-    }
-    private int func(int m, int n,int[][] matrix, int[][] dp){
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                if(matrix[i][j]==1){
-                    dp[i][j]=0;
-                    continue;
-                }
-                if(i==0 && j==0){
-                    dp[i][j]=1;
-                    continue;
-                }
-                int up=0,left=0;
-                if(i>0){
-                    up=dp[i-1][j];
-                }
-                if(j>0){
-                    left=dp[i][j-1];
-                }
-                dp[i][j]=up+left;
-            }
-               
-        }
-        return dp[m-1][n-1];
-
+        int[][] dp=new int[m+1][n+1];
+       for(int[] rows:dp){
+        Arrays.fill(rows,-1);
+       }
+       return func(m-1,n-1,matrix,dp);
      }
+    private int func(int r, int c, int[][] matrix, int[][] dp) {
+        
+        if(r<0 || c<0 || matrix[r][c]==1) {
+            return 0;
+        }
+        if(r==0 && c==0){
+            return 1;
+        }
+        if(dp[r][c] != -1){
+            return dp[r][c];
+        }
+
+        int up=func(r-1,c,matrix,dp);
+        int left=func(r,c-1,matrix,dp);
+
+        return dp[r][c]=up+left;       
+    }
 }
+
