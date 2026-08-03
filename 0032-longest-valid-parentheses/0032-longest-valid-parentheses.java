@@ -12,7 +12,8 @@ class Solution {
                 if (s.charAt(i - 1) == '(') {
                     dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
                 }
-                // Case 2: "))" pattern
+                //case 2
+                //ye (()) ese ke liye hai ki closing se pehle bhi ek closing tha toh wo check krlo ki wo valid tha to dp mei stored hoga fir dp update krte wqt abji ki valid + pichli valid + agar pichli se pehle bhi ki valid thi toh use bhi add krdo
                 else if (i - dp[i - 1] > 0 && s.charAt(i - dp[i - 1] - 1) == '(') {
                     dp[i] = dp[i - 1] + 2 + ((i - dp[i - 1] >= 2) ? dp[i - dp[i - 1] - 2] : 0);
                 }
