@@ -1,22 +1,24 @@
-import java.util.*;
-
 class Solution {
     public List<Integer> findMissingElements(int[] nums) {
-        Arrays.sort(nums);
-        List<Integer> list = new ArrayList<>();
-        
-        int n = nums.length;
-        int idx = 0;
-        
-        // Min se Max element tak saari values loop karo
-        for (int curr = nums[0]; curr <= nums[n - 1]; curr++) {
-            if (idx < n && nums[idx] == curr) {
-                idx++; // Element target me present hai, pointer aage badhao
-            } else {
-                list.add(curr); // Missing element mila, list me add karo
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+
+        HashSet<Integer> set = new HashSet<>();
+
+        for (int num : nums) {
+            min = Math.min(min, num);
+            max = Math.max(max, num);
+            set.add(num);
+        }
+
+        List<Integer> ans = new ArrayList<>();
+
+        for (int i = min + 1; i < max; i++) {
+            if (!set.contains(i)) {
+                ans.add(i);
             }
         }
-        
-        return list;
+
+        return ans;
     }
 }
