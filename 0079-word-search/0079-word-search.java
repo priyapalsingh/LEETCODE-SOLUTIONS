@@ -2,35 +2,35 @@ class Solution {
     public boolean exist(char[][] board, String word) {
         int rows=board.length;
         int cols=board[0].length;
+        boolean[][] visited=new boolean[rows][cols];
 
         for(int r=0;r<rows;r++){
             for(int c=0;c<cols;c++){
-                if(board[r][c]==word.charAt(0) && dfs(board,word,r,c,0)){
+                if(board[r][c]==word.charAt(0) && dfs(board,word,r,c,0,visited)){
                     return true;
                 }
             }
         }
         return false;
     }
-    private boolean dfs(char[][] board, String word ,int r,int c, int index){
-         int rows=board.length;
-         int cols=board[0].length;
-
-         if(index==word.length()){
+    private boolean dfs(char[][] board,String word,int r,int c,int i,boolean[][] visited){
+        int rows=board.length;
+        int cols=board[0].length;
+        if(i==word.length()){
             return true;
-         }
+        }
 
-         if( r<0 || r>=rows || c<0 || c>=cols || board[r][c]!=word.charAt(index) ){
+        if(r<0 || r>=rows || c<0 || c>=cols || visited[r][c] || word.charAt(i)!=board[r][c] ){
             return false;
-         }
+        }
 
-         char temp=board[r][c];
-         board[r][c]='#';
+        visited[r][c]=true;
+        boolean found=dfs(board,word,r+1,c,i+1,visited) || dfs(board,word,r-1,c,i+1,visited) || dfs(board,word,r,c+1,i+1,visited) || dfs(board,word,r,c-1,i+1,visited);
 
-         boolean found=dfs(board,word,r-1,c,index+1) || dfs(board,word,r+1,c,index+1) || dfs(board,word,r,c+1,index+1) || dfs(board,word,r,c-1,index+1);
+        visited[r][c]=false;
 
-         board[r][c]=temp;
-         return found;
+        return found;
+
 
     }
 }
