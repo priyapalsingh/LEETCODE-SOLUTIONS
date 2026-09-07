@@ -6,30 +6,30 @@ class Solution {
 
         for(int r=0;r<rows;r++){
             for(int c=0;c<cols;c++){
-                if(board[r][c]==word.charAt(0) && dfs(board,word,r,c,0,visited)){
+                if(word.charAt(0)==board[r][c] && dfs(0,board,word,visited,r,c)){
                     return true;
                 }
             }
         }
         return false;
     }
-    private boolean dfs(char[][] board,String word,int r,int c,int i,boolean[][] visited){
+    private boolean dfs(int i,char[][] board, String word ,boolean[][] visited,int r,int c){
         int rows=board.length;
         int cols=board[0].length;
+
         if(i==word.length()){
             return true;
         }
 
-        if(r<0 || r>=rows || c<0 || c>=cols || visited[r][c] || word.charAt(i)!=board[r][c] ){
+        if(r<0||r>=rows||c<0||c>=cols||visited[r][c]||word.charAt(i)!=board[r][c]){
             return false;
         }
 
         visited[r][c]=true;
-        boolean found=dfs(board,word,r+1,c,i+1,visited) || dfs(board,word,r-1,c,i+1,visited) || dfs(board,word,r,c+1,i+1,visited) || dfs(board,word,r,c-1,i+1,visited);
-
+        boolean flag=dfs(i+1,board,word,visited,r+1,c) || dfs(i+1,board,word,visited,r-1,c) || dfs(i+1,board,word,visited,r,c+1) || dfs(i+1,board,word,visited,r,c-1);
         visited[r][c]=false;
 
-        return found;
+        return flag;
 
 
     }
