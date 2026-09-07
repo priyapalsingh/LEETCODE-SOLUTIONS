@@ -1,31 +1,40 @@
+import java.util.Arrays;
+
 class Solution {
     public int longestPalindromeSubseq(String s) {
-        String t=new StringBuilder(s).reverse().toString();
-        return lcs(s,t);
+        String t = new StringBuilder(s).reverse().toString();
+        int n = s.length();
+        int[][] memo = new int[n][n];
+        
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
+        }
+        
+        return lcs(0, 0, s, t, memo);
     }
-    private int lcs(String s,String t){
-        int m=s.length();
-        int n=t.length();
-        int[][] dp=new int[m+1][n+1];
-        //base case
-        for(int i=0;i<=m;i++){
-            dp[i][0]=0;
+
+    private int lcs(int i, int j, String s, String t, int[][] memo) {
+        // Base case: jab koi bhi string khatam ho jaye
+        if (i == s.length() || j == t.length()) {
+            return 0;
         }
-        for(int i=0;i<=n;i++){
-            dp[0][i]=0;
+
+        // Return cached result
+        if (memo[i][j] != -1) {
+            return memo[i][j];
         }
-        //fill the rest of the table
-        for(int i=1;i<=m;i++){
-            for(int j=1;j<=n;j++){
-                 if (s.charAt(i - 1) == t.charAt(j - 1)) {
-                    dp[i][j] = 1 + dp[i - 1][j - 1];
-                } 
-                // If they don't match, take the max by ignoring one character from either string
-                else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-                }
-            }
+
+        // Match case
+        if (s.charAt(i) == t.charAt(j)) {
+            memo[i][j] = 1 + lcs(i + 1, j + 1, s, t, memo);
+        } 
+        // Mismatch case: ek baar s ka character skip, ek baar t ka skip
+        else {
+            int skipS = lcs(i + 1, j, s, t, memo);
+            int skipT = lcs(i, j + 1, s, t, memo);
+            memo[i][j] = Math.max(skipS, skipT);
         }
-        return dp[m][n];
+
+        return memo[i][j];
     }
 }
